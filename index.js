@@ -28,7 +28,6 @@ const sendMessage = async (chatId, text, options = {}) => {
         text,
         options,
     });
-    bot.sendMessage(TIGER_GROUP_CHAT_ID, text, options);
     return bot.sendMessage(chatId, text, options);
 };
 
@@ -53,14 +52,14 @@ bot.on("message", msg => {
     });
 });
 
-bot.on("callback_query", q => {
-    console.log("📥 BOT RECEIVED CALLBACK:", {
-        chatId: q.message.chat.id,
-        from: q.from,
-        data: q.data,
-        messageId: q.message.message_id,
-    });
-});
+// bot.on("callback_query", q => {
+//     console.log("📥 BOT RECEIVED CALLBACK:", {
+//         chatId: q.message.chat.id,
+//         from: q.from,
+//         data: q.data,
+//         messageId: q.message.message_id,
+//     });
+// });
 
 // =============== CUSTOMER FLOW =====================
 
@@ -174,6 +173,20 @@ bot.on("message", async msg => {
 
         console.log("💰 AMOUNT RECEIVED:", usdAmount);
         console.log("🟩 FETCHING RATE FROM DB FOR BRAND:", session.brand);
+
+        const brand = session.brand;
+
+        const caption =
+            `[TICKET - NEW]\n` +
+            `Brand: ${brand}\n` +
+            `Amount: $${usdAmount}\n` +
+            `Message: Customer uploaded a card.`;
+
+        await sendMessage(TIGER_GROUP_CHAT_ID, caption);
+
+        await sendMessage(chatId, "Please hold.");
+
+        return;
 
         try {
             const res = await pool.query(
