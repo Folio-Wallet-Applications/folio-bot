@@ -64,6 +64,7 @@ bot.on("callback_query", q => {
 // =============== CUSTOMER FLOW =====================
 
 bot.onText(/\/start/, async msg => {
+    console.log("Message object:", msg);
     const chatId = msg.chat.id;
 
     if (chatId === TIGER_GROUP_CHAT_ID) return;
@@ -77,6 +78,12 @@ bot.onText(/\/start/, async msg => {
             reply_markup: {
                 inline_keyboard: [
                     [{ text: "Sell Gift Card", callback_data: "sell_card" }],
+                    [
+                        {
+                            text: "Contact Support",
+                            callback_data: "contact_support",
+                        },
+                    ],
                 ],
             },
         }
@@ -96,6 +103,12 @@ bot.on("callback_query", async query => {
         await sendMessage(
             chatId,
             "Which card are you selling? (e.g. Apple, Amazon, Steam)"
+        );
+    } else if (data === "contact_support") {
+        sessions[chatId].step = "await_card";
+        await sendMessage(
+            chatId,
+            "Ok. Click here to contact support or call +23481293430343"
         );
     } else if (data === "confirm_yes") {
         sessions[chatId].step = "await_card";
