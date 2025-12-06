@@ -67,9 +67,13 @@ bot.onText(/\/start/, async msg => {
     console.log("Message object:", msg);
     const chatId = msg.chat.id;
 
-    if (chatId === TIGER_GROUP_CHAT_ID) return;
+    if (chatId === TIGER_GROUP_CHAT_ID) return console.log("Same group");
 
     sessions[chatId] = {};
+
+    console.log(
+        `New Session Created\nList of sessions:${JSON.stringify(sessions)}`
+    );
 
     await sendMessage(
         chatId,
@@ -95,8 +99,6 @@ bot.on("callback_query", async query => {
     const data = query.data;
 
     if (chatId === TIGER_GROUP_CHAT_ID) return;
-
-    console.log("🔄 CALLBACK FLOW:", { chatId, data });
 
     if (data === "sell_card") {
         sessions[chatId] = { step: "ask_brand" };
